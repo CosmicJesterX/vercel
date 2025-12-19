@@ -540,6 +540,18 @@ test('add a sensitive env var', async () => {
       env: {
         VERCEL_ORG_ID: link.orgId,
         VERCEL_PROJECT_ID: link.projectId,
+        // CURRENT (failing):
+await waitForPrompt(addEnvCommand, /What's the value of [^?]+\? /);
+
+// FIX - Use callback like other working tests:
+await waitForPrompt(addEnvCommand, chunk => 
+  chunk.includes("What's the value of") && chunk.includes("envVarName")
+);
+  await waitForPrompt(
+  addEnvCommand, 
+  chunk => chunk.includes("What's the value of") && chunk.includes("envVarName"),
+  5000  // Increase from 3000ms default
+);
       },
     }
   );
